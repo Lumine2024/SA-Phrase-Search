@@ -1,0 +1,3 @@
+/workspaces/SA-Phrase-Search/build/CMakeFiles/main.dir
+/workspaces/SA-Phrase-Search/build/CMakeFiles/edit_cache.dir
+/workspaces/SA-Phrase-Search/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/workspaces/SA-Phrase-Search/build",
+  "command": "/usr/bin/g++  -I/workspaces/SA-Phrase-Search/include -g -std=gnu++23 -o CMakeFiles/main.dir/main.cpp.o -c /workspaces/SA-Phrase-Search/main.cpp",
+  "file": "/workspaces/SA-Phrase-Search/main.cpp",
+  "output": "CMakeFiles/main.dir/main.cpp.o"
+}
+]
