@@ -40,7 +40,8 @@ void testWideCharSearch() {
     SuffixArrayWChar sa(text, wcslen(text));
     SAMatcherWChar matcher(sa);
     
-    auto results = matcher.findAll(L"ana", 3);
+    const wchar_t* pattern = L"ana";
+    auto results = matcher.findAll(pattern, wcslen(pattern));
     assert(results.size() == 2);
     
     std::cout << "✓ Wide character search tests passed" << std::endl;
@@ -104,14 +105,14 @@ void testQueryParser() {
 void testChineseText() {
     std::cout << "Testing Chinese text..." << std::endl;
     
-    // Chinese text: "罗密欧与朱丽叶。罗密欧爱朱丽叶。"
+    // Chinese text: "罗密欧与朱丽叶。罗密欧爱朱丽叶。" (Romeo and Juliet. Romeo loves Juliet.)
     const wchar_t* text = L"\u7F57\u5BC6\u6B27\u4E0E\u6731\u4E3D\u53F6\u3002"
                          L"\u7F57\u5BC6\u6B27\u7231\u6731\u4E3D\u53F6\u3002";
     
     SuffixArrayWChar sa(text, wcslen(text));
     SAMatcherWChar matcher(sa);
     
-    // Search for "罗密欧" (Romeo)
+    // Search for "罗密欧" (Romeo in Chinese)
     const wchar_t* romeo = L"\u7F57\u5BC6\u6B27";
     auto results = matcher.findAll(romeo, wcslen(romeo));
     
