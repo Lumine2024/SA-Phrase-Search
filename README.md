@@ -14,7 +14,8 @@ A high-performance library for phrase search using suffix arrays. Supports both 
 ## Library Components
 
 ### 1. `sa_is.hpp` - Suffix Array Construction
-Implements the SA-IS algorithm for building suffix arrays in linear time.
+Implements suffix array construction using a comparison-based sorting algorithm.
+Currently uses O(n² log n) for simplicity and correctness. Can be upgraded to SA-IS for O(n) performance.
 
 ```cpp
 #include "sa_is.hpp"
@@ -169,9 +170,13 @@ int main() {
 
 ## Complexity
 
-- **Suffix Array Construction**: O(n) time, O(n) space
+- **Suffix Array Construction**: O(n² log n) time, O(n) space (current implementation)
 - **Pattern Search**: O(m log n) time, where m is pattern length
 - **LCP Construction**: O(n) time using Kasai's algorithm
+
+Note: The current implementation uses a simple comparison-based suffix array construction
+for correctness and simplicity. For better performance on very large texts, the algorithm
+can be upgraded to SA-IS which runs in O(n) time.
 
 ## License
 

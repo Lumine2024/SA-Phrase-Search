@@ -25,93 +25,27 @@ private:
     const CharT* text_;      // Pointer to original text
     size_t n_;               // Length of text
 
-    // Helper function to determine if a suffix is S-type or L-type
-    void computeTypes(const CharT* s, int n, std::vector<bool>& types) {
-        types.resize(n);
-        types[n - 1] = false; // Last character is S-type
-        
-        for (int i = n - 2; i >= 0; --i) {
-            if (s[i] < s[i + 1]) {
-                types[i] = false; // S-type
-            } else if (s[i] > s[i + 1]) {
-                types[i] = true; // L-type
-            } else {
-                types[i] = types[i + 1];
-            }
-        }
-    }
-
-    // Induced sorting from LMS suffixes
-    void induceSort(const CharT* s, int n, std::vector<int>& sa, 
-                    const std::vector<bool>& types, const std::vector<int>& buckets,
-                    const std::vector<int>& bucket_ends) {
-        // Initialize SA with -1
-        std::fill(sa.begin(), sa.end(), -1);
-        
-        // Place LMS suffixes at the end of their buckets
-        std::vector<int> bucket_tails = bucket_ends;
-        for (int i = n - 1; i >= 0; --i) {
-            if (isLMS(i, types)) {
-                sa[--bucket_tails[s[i]]] = i;
-            }
-        }
-        
-        // Induce L-type suffixes
-        std::vector<int> bucket_heads = buckets;
+    // Simple comparison-based suffix array construction
+    // This is O(n^2 log n) but correct and simple
+    void buildSimple(const CharT* s, int n, std::vector<int>& sa) {
+        // Initialize suffix array with indices
+        sa.resize(n);
         for (int i = 0; i < n; ++i) {
-            if (sa[i] > 0 && types[sa[i] - 1]) {
-                sa[bucket_heads[s[sa[i] - 1]]++] = sa[i] - 1;
+            sa[i] = i;
+        }
+        
+        // Sort suffixes using comparison
+        std::sort(sa.begin(), sa.end(), [s, n](int a, int b) {
+            // Compare suffixes starting at positions a and b
+            int i = 0;
+            while (a + i < n && b + i < n) {
+                if (s[a + i] < s[b + i]) return true;
+                if (s[a + i] > s[b + i]) return false;
+                i++;
             }
-        }
-        
-        // Induce S-type suffixes
-        bucket_tails = bucket_ends;
-        for (int i = n - 1; i >= 0; --i) {
-            if (sa[i] > 0 && !types[sa[i] - 1]) {
-                sa[--bucket_tails[s[sa[i] - 1]]] = sa[i] - 1;
-            }
-        }
-    }
-
-    // Check if position is LMS (left-most S-type)
-    bool isLMS(int i, const std::vector<bool>& types) const {
-        if (i == 0) return false;
-        return !types[i] && types[i - 1];
-    }
-
-    // Build suffix array using SA-IS algorithm
-    void buildSAIS(const CharT* s, int n, std::vector<int>& sa, int alphabet_size) {
-        if (n == 0) {
-            return;
-        }
-        
-        if (n == 1) {
-            sa[0] = 0;
-            return;
-        }
-        
-        // Compute suffix types (S or L)
-        std::vector<bool> types;
-        computeTypes(s, n, types);
-        
-        // Compute bucket sizes
-        std::vector<int> buckets(alphabet_size, 0);
-        for (int i = 0; i < n; ++i) {
-            buckets[s[i]]++;
-        }
-        
-        // Compute bucket start positions
-        std::vector<int> bucket_starts(alphabet_size, 0);
-        std::vector<int> bucket_ends(alphabet_size, 0);
-        int sum = 0;
-        for (int i = 0; i < alphabet_size; ++i) {
-            bucket_starts[i] = sum;
-            sum += buckets[i];
-            bucket_ends[i] = sum;
-        }
-        
-        // Induce sort
-        induceSort(s, n, sa, types, bucket_starts, bucket_ends);
+            // If one suffix is a prefix of the other, shorter one comes first
+            return (a + i == n && b + i < n);
+        });
     }
 
     // Compute LCP array using Kasai's algorithm
@@ -149,16 +83,8 @@ public:
         
         if (n_ == 0) return;
         
-        // Find alphabet size (max character value + 1)
-        int max_char = 0;
-        for (size_t i = 0; i < n_; ++i) {
-            if (text_[i] > max_char) {
-                max_char = text_[i];
-            }
-        }
-        int alphabet_size = max_char + 1;
-        
-        buildSAIS(text, n_, sa_, alphabet_size);
+        // Use simple sorting algorithm for correctness
+        buildSimple(text, n_, sa_);
         computeLCP();
     }
     
