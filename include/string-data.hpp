@@ -23,4 +23,4 @@ private:
     std::vector<int> sa;
 };
 
-}
+} // namespace sa_ps

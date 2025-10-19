@@ -44,6 +44,6 @@ std::vector<int> sa_match(const std::wstring &s, const std::vector<int> &sa, con
     return ans;
 }
 
-}
+} // namespace detail
 
-}
+} // namespace sa_ps

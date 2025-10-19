@@ -14,10 +14,16 @@ int main(int argc, char *argv[]) {
     }
     file.imbue(locale());
     wstring content((istreambuf_iterator<wchar_t>(file)), istreambuf_iterator<wchar_t>());
-    string_data sd(content);
-    vector<int> result = sd.search(wstring(L"宝玉") & wstring(L"黛玉"), 7);
-    for(int pos : result) {
-        wcout << pos << ' ' << content.substr(pos, 30) << endl;
-    }
+    auto t0 = chrono::high_resolution_clock::now();
+    string_data data(content);
+    auto t1 = chrono::high_resolution_clock::now();
+    wcout << L"Suffix array built in " << chrono::duration_cast<chrono::milliseconds>(t1 - t0).count() << L" ms." << endl;
+    auto inds = data.search(wstring(L"林黛玉"));
+    auto t2 = chrono::high_resolution_clock::now();
+    wcout << L"Search completed in " << chrono::duration_cast<chrono::microseconds>(t2 - t1).count() << L" ms." << endl;
+    // for(auto ind : inds) {
+    //     wcout << ind << L": "
+    //     << content.substr(ind - 8, 20) << L"\n" << endl;
+    // }
     return 0;
 }

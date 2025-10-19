@@ -131,9 +131,9 @@ std::vector<int> grouped_match(const std::wstring &str, const std::vector<int> &
     return ans;
 }
 
-}
+} // namespace detail
 
-}
+} // namespace sa_ps
 
 using sa_ps::detail::operator&;
 using sa_ps::detail::operator|;
