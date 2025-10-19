@@ -7,11 +7,17 @@ using namespace sa_ps;
 int main(int argc, char *argv[]) {
     locale::global(locale(""));
     wcout.imbue(locale());
-    wstring str = L"罗密欧与朱丽叶。罗密欧爱朱丽叶。朱丽叶爱罗密欧。";
-    string_data data(str);
-    auto result = data.search(std::wstring(L"罗密欧") & std::wstring(L"爱"));
-    for(int i : result) {
-        wcout << i << ' ' << str.substr(i) << endl;
+    wifstream file("../examples/hlm.txt");
+    if(!file) {
+        wcerr << L"Cannot open file." << endl;
+        return 1;
+    }
+    file.imbue(locale());
+    wstring content((istreambuf_iterator<wchar_t>(file)), istreambuf_iterator<wchar_t>());
+    string_data sd(content);
+    vector<int> result = sd.search(wstring(L"宝玉") & wstring(L"黛玉"), 7);
+    for(int pos : result) {
+        wcout << pos << ' ' << content.substr(pos, 30) << endl;
     }
     return 0;
 }
